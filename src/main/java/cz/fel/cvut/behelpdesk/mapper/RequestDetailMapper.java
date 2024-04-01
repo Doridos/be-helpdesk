@@ -2,14 +2,10 @@ package cz.fel.cvut.behelpdesk.mapper;
 
 import cz.fel.cvut.behelpdesk.dao.Request;
 import cz.fel.cvut.behelpdesk.dto.DetailRequestDto;
-import cz.fel.cvut.behelpdesk.service.EmployeeService;
 import org.mapstruct.*;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {EmployeeService.class})
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RequestDetailMapper {
-
-    @Mapping(target = "assignedBy", source = "assignedByUsername")
-    @Mapping(target = "assignedTo", source = "assignedToUsername")
     Request toEntity(DetailRequestDto detailRequestDto);
 
     @AfterMapping
