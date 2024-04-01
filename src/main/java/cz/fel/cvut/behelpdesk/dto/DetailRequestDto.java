@@ -2,6 +2,7 @@ package cz.fel.cvut.behelpdesk.dto;
 
 import cz.fel.cvut.behelpdesk.dao.Comment;
 import cz.fel.cvut.behelpdesk.dao.Request;
+import cz.fel.cvut.behelpdesk.dto.ShortEmployeeDto;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
 import cz.fel.cvut.behelpdesk.enumeration.PriorityEnum;
 import cz.fel.cvut.behelpdesk.enumeration.StateEnum;
@@ -15,14 +16,13 @@ import java.util.UUID;
  * DTO for {@link Request}
  */
 public record DetailRequestDto(Long id, String name, String description, LocalDateTime dateOfAnnouncement,
-                               LocalDateTime dateOfCompletion, String assignedByUsername, String assignedByForename,
-                               String assignedBySurname, String assignedToUsername, String assignedToForename,
-                               String assignedToSurname, List<CommentDto> comments, StateEnum requestState,
-                               CategoryEnum requestCategory, PriorityEnum requestPriority) implements Serializable {
+                               LocalDateTime dateOfCompletion, ShortEmployeeDto assignedBy, ShortEmployeeDto assignedTo,
+                               List<CommentDto> comments, StateEnum requestState, CategoryEnum requestCategory,
+                               PriorityEnum requestPriority) implements Serializable {
     /**
      * DTO for {@link Comment}
      */
-    public record CommentDto(UUID id, String content, LocalDateTime dateOfComment, String authorUsername,
-                             String authorForename, String authorSurname) implements Serializable {
+    public record CommentDto(UUID id, String content, LocalDateTime dateOfComment,
+                             ShortEmployeeDto author) implements Serializable {
     }
 }

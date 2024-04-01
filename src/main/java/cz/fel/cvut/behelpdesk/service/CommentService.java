@@ -10,6 +10,7 @@ import cz.fel.cvut.behelpdesk.mapper.CommentMapper;
 import cz.fel.cvut.behelpdesk.mapper.RequestMapper;
 import cz.fel.cvut.behelpdesk.repository.CommentRepository;
 import cz.fel.cvut.behelpdesk.repository.RequestRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     private final CommentMapper commentMapper;
+
+    @Transactional
     public CommentDto createComment(InputCommentDto inputCommentDto){
         Comment requestToSave = commentMapper.toEntity(inputCommentDto);
         return commentMapper.toDto(commentRepository.save(requestToSave));

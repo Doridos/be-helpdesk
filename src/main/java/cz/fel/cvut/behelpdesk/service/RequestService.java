@@ -9,6 +9,7 @@ import cz.fel.cvut.behelpdesk.exception.NotFoundException;
 import cz.fel.cvut.behelpdesk.mapper.RequestDetailMapper;
 import cz.fel.cvut.behelpdesk.mapper.RequestMapper;
 import cz.fel.cvut.behelpdesk.repository.RequestRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +20,18 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
     private final RequestDetailMapper requestDetailMapper;
+
+    @Transactional
     public RequestDto createRequest(InputRequestDto inputRequestDto){
         Request requestToSave = requestMapper.toEntity(inputRequestDto);
         return requestMapper.toDto(requestRepository.save(requestToSave));
     }
 
+    @Transactional
     public RequestDto updateRequest(Long id, InputRequestDto inputRequestDto){
         Request requestToUpdate = findRequestById(id);
-        requestMapper.partialUpdate(inputRequestDto, requestToUpdate);
-        Request requestToSave = requestMapper.toEntity(inputRequestDto);
-        return requestMapper.toDto(requestRepository.save(requestToSave));
+        requestToUpdate = requestMapper.partialUpdate(inputRequestDto, requestToUpdate);
+        return requestMapper.toDto(requestRepository.save(requestToUpdate));
     }
 
     public DetailRequestDto getRequestDetail(Long id){
