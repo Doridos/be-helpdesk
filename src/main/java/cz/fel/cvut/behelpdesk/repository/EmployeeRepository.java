@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
     List<Employee> findByUserRole(RoleEnum userRole);
+
+    long countByUsername(String username);
 }

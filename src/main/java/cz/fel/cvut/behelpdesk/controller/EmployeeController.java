@@ -1,25 +1,31 @@
 package cz.fel.cvut.behelpdesk.controller;
 
 import cz.fel.cvut.behelpdesk.dao.Employee;
+import cz.fel.cvut.behelpdesk.dto.*;
 import cz.fel.cvut.behelpdesk.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
     @GetMapping(value = "/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Employee getEmployeeByUsername(@PathVariable String username) {
+    public DetailEmployeeDto getEmployeeByUsername(@PathVariable String username) {
+        return employeeService.getEmployeeDetailByUsername(username);
 
-        return employeeService.findEmployeeById(username);
-
+    }
+    @PutMapping(value = "/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<InputEmployeeCategoriesDto> updateSpecificEmployee(@PathVariable String username, @RequestBody InputEmployeeCategoriesDto inputEmployeeCategoriesDto) {
+        return new ResponseEntity<>(employeeService.updateEmployee(username, inputEmployeeCategoriesDto), HttpStatus.OK);
+    }
+    @PostMapping(value = "/add")
+    public ResponseEntity<Integer> addEmployees() {
+        return new ResponseEntity<>(  employeeService.addEmployeesFromAD(), HttpStatus.OK);
     }
 }
