@@ -18,8 +18,6 @@ public interface RequestMapper {
     Request toEntity(InputRequestDto requestDto);
 
 
-
-
     RequestDto toDto(Request request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

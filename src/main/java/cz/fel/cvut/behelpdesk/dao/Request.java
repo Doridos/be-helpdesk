@@ -3,6 +3,7 @@ package cz.fel.cvut.behelpdesk.dao;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
 import cz.fel.cvut.behelpdesk.enumeration.PriorityEnum;
 import cz.fel.cvut.behelpdesk.enumeration.StateEnum;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,13 +20,13 @@ public class Request {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @Column
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime dateOfAnnouncement;
 
     @Column
