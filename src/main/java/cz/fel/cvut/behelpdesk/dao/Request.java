@@ -35,9 +35,11 @@ public class Request {
     @JoinColumn(referencedColumnName = "username")
     private Employee assignedBy;
 
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "username")
-    private Employee assignedTo;
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "username"))
+    private List<Employee> assignedTo;
 
     @OneToMany(mappedBy = "request")
     private List<Comment> comments;

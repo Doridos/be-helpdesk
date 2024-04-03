@@ -29,7 +29,7 @@ public class Employee {
     @OneToMany(mappedBy = "assignedBy")
     private List<Request> assignedByMe;
 
-    @OneToMany(mappedBy = "assignedTo")
+    @ManyToMany(mappedBy = "assignedTo")
     private List<Request> assignedToMe;
 
     @Enumerated(EnumType.STRING)

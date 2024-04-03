@@ -16,9 +16,9 @@ import java.util.UUID;
  * DTO for {@link Request}
  */
 public record DetailRequestDto(Long id, String name, String description, LocalDateTime dateOfAnnouncement,
-                               LocalDateTime dateOfCompletion, ShortEmployeeDto assignedBy, ShortEmployeeDto assignedTo,
-                               List<CommentDto> comments, StateEnum requestState, CategoryEnum requestCategory,
-                               PriorityEnum requestPriority) implements Serializable {
+                               LocalDateTime dateOfCompletion, ShortEmployeeDto assignedBy,
+                               List<ShortEmployeeDto> assignedTo, List<CommentDto> comments, StateEnum requestState,
+                               CategoryEnum requestCategory, PriorityEnum requestPriority) implements Serializable {
     /**
      * DTO for {@link Comment}
      */

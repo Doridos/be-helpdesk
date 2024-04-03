@@ -7,11 +7,12 @@ import cz.fel.cvut.behelpdesk.enumeration.StateEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link Request}
  */
 public record InputRequestDto(String name, String description, LocalDateTime dateOfAnnouncement,
                               LocalDateTime dateOfCompletion, StateEnum requestState, CategoryEnum requestCategory,
-                              PriorityEnum requestPriority, String assignedTo, String assignedBy) implements Serializable {
+                              PriorityEnum requestPriority, List<String> assignedTo, String assignedBy) implements Serializable {
 }
