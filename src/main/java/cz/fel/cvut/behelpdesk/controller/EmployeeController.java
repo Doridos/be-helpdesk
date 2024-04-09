@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
-    @GetMapping(value = "/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/user/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
     public DetailEmployeeDto getEmployeeByUsername(@PathVariable String username) {
         return employeeService.getEmployeeDetailByUsername(username);
 
@@ -28,8 +28,8 @@ public class EmployeeController {
         return employeeService.getEmployeesByCategory(CategoryEnum.valueOf(category.toUpperCase()));
     }
     @PutMapping(value = "/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InputEmployeeCategoriesDto> updateSpecificEmployee(@PathVariable String username, @RequestBody InputEmployeeCategoriesDto inputEmployeeCategoriesDto) {
-        return new ResponseEntity<>(employeeService.updateEmployee(username, inputEmployeeCategoriesDto), HttpStatus.OK);
+    public ResponseEntity<EmployeeUpdateDto> updateSpecificEmployee(@PathVariable String username, @RequestBody EmployeeUpdateDto employeeUpdateDto) {
+        return new ResponseEntity<>(employeeService.updateEmployee(username, employeeUpdateDto), HttpStatus.OK);
     }
     @PostMapping(value = "/add")
     public ResponseEntity<Integer> addEmployees() {

@@ -1,15 +1,15 @@
 package cz.fel.cvut.behelpdesk.mapper;
 
 import cz.fel.cvut.behelpdesk.dao.Employee;
-import cz.fel.cvut.behelpdesk.dto.InputEmployeeCategoriesDto;
+import cz.fel.cvut.behelpdesk.dto.EmployeeUpdateDto;
 import org.mapstruct.*;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface EmployeeMapper {
-    Employee toEntity(InputEmployeeCategoriesDto inputEmployeeCategoriesDto);
+    Employee toEntity(EmployeeUpdateDto employeeUpdateDto);
 
-    InputEmployeeCategoriesDto toDto(Employee employee);
+    EmployeeUpdateDto toDto(Employee employee);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Employee partialUpdate(InputEmployeeCategoriesDto inputEmployeeCategoriesDto, @MappingTarget Employee employee);
+    Employee partialUpdate(EmployeeUpdateDto employeeUpdateDto, @MappingTarget Employee employee);
 }

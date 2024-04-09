@@ -22,7 +22,7 @@ public class RequestController {
     private final RequestService requestService;
     private final EmployeeService employeeService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RequestDto> addRequest(@RequestBody InputRequestDto inputRequestDto) {
         return new ResponseEntity<>(requestService.createRequest(inputRequestDto), HttpStatus.OK);
     }
