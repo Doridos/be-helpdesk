@@ -11,5 +11,6 @@ import java.util.List;
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findByAssignedTo(List<Employee> employees);
     List<Request> findByRequestCategory(CategoryEnum category);
+    List<Request> findByRequestCategoryIn(List<CategoryEnum> categories);
     List<Request> findByAssignedBy(Employee employee);
 }

@@ -46,6 +46,10 @@ public class RequestController {
     public List<DetailRequestDto> getRequestByCategory(@PathVariable String category) {
         return requestService.getRequestsByCategory(CategoryEnum.valueOf(category.toUpperCase()));
     }
+    @PostMapping(value = "/categories", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<DetailRequestDto> getRequestsByCategories(@RequestBody List<CategoryEnum> categories) {
+        return requestService.getRequestsByCategories(categories);
+    }
 
     @GetMapping(value = "/all",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DetailRequestDto> getAllRequests() {

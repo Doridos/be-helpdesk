@@ -40,6 +40,10 @@ public class RequestService {
     public List<DetailRequestDto> getRequestsByCategory(CategoryEnum category){
         return requestRepository.findByRequestCategory(category).stream().map(requestDetailMapper::toDto).toList();
     }
+    public List<DetailRequestDto> getRequestsByCategories(List<CategoryEnum> categories){
+        return requestRepository.findByRequestCategoryIn(categories).stream().map(requestDetailMapper::toDto).toList();
+    }
+
 
     public DetailRequestDto getRequestDetail(Long id){
        return requestDetailMapper.toDto(findRequestById(id));
