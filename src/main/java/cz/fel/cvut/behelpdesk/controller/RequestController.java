@@ -1,5 +1,6 @@
 package cz.fel.cvut.behelpdesk.controller;
 
+import cz.fel.cvut.behelpdesk.dto.DetailEmployeeDto;
 import cz.fel.cvut.behelpdesk.dto.DetailRequestDto;
 import cz.fel.cvut.behelpdesk.dto.InputRequestDto;
 import cz.fel.cvut.behelpdesk.dto.RequestDto;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -62,14 +64,14 @@ public class RequestController {
     public ResponseEntity<RequestDto> updateSpecificRequest(@PathVariable Long id, @RequestBody InputRequestDto inputRequestDto) {
         return new ResponseEntity<>(requestService.updateRequest(id, inputRequestDto), HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
     public String index() {
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if (principal instanceof UserDetails) {
-                return ((UserDetails)principal).getUsername();
+            if (principal instanceof DetailEmployeeDto) {
+                return ((DetailEmployeeDto)principal).forename();
             } else {
                 return principal.toString();
             }
