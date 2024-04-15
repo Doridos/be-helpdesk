@@ -1,10 +1,12 @@
 package cz.fel.cvut.behelpdesk.controller;
 
+import cz.fel.cvut.behelpdesk.dao.EmailRequest;
 import cz.fel.cvut.behelpdesk.dto.DetailEmployeeDto;
 import cz.fel.cvut.behelpdesk.dto.DetailRequestDto;
 import cz.fel.cvut.behelpdesk.dto.InputRequestDto;
 import cz.fel.cvut.behelpdesk.dto.RequestDto;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
+import cz.fel.cvut.behelpdesk.service.EmailService;
 import cz.fel.cvut.behelpdesk.service.EmployeeService;
 import cz.fel.cvut.behelpdesk.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class RequestController {
 
     private final RequestService requestService;
     private final EmployeeService employeeService;
+    private final EmailService emailService;
 
     @PostMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RequestDto> addRequest(@RequestBody InputRequestDto inputRequestDto) {
@@ -64,16 +68,15 @@ public class RequestController {
     public ResponseEntity<RequestDto> updateSpecificRequest(@PathVariable Long id, @RequestBody InputRequestDto inputRequestDto) {
         return new ResponseEntity<>(requestService.updateRequest(id, inputRequestDto), HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('MANAGER')")
+
     @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
     public String index() {
-
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if (principal instanceof DetailEmployeeDto) {
-                return ((DetailEmployeeDto)principal).forename();
-            } else {
-                return principal.toString();
-            }
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.setMessage("");
+        emailRequest.setSubject("");
+        Set<String> recipients = Set.of("");
+        emailRequest.setRecipients(recipients);
+            emailService.sendEmail(emailRequest);
+            return "Email sent successfully";
     }
 }
