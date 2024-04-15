@@ -23,6 +23,10 @@ public class EmployeeController {
         return employeeService.getEmployeeDetailByUsername(username);
 
     }
+    @GetMapping(value = "/all",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<DetailEmployeeDto> getAllRequests() {
+        return employeeService.getAllEmployees();
+    }
     @GetMapping(value = "/{category}")
     public List<DetailEmployeeDto> getUsersByCategory(@PathVariable String category) {
         return employeeService.getEmployeesByCategory(CategoryEnum.valueOf(category.toUpperCase()));

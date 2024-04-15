@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,5 +61,17 @@ public class RequestController {
     @PutMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RequestDto> updateSpecificRequest(@PathVariable Long id, @RequestBody InputRequestDto inputRequestDto) {
         return new ResponseEntity<>(requestService.updateRequest(id, inputRequestDto), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
+    public String index() {
+
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (principal instanceof UserDetails) {
+                return ((UserDetails)principal).getUsername();
+            } else {
+                return principal.toString();
+            }
     }
 }
