@@ -1,11 +1,14 @@
 package cz.fel.cvut.behelpdesk.service;
 
+import cz.fel.cvut.behelpdesk.dao.EmailRequest;
 import cz.fel.cvut.behelpdesk.dao.Employee;
+import cz.fel.cvut.behelpdesk.dto.DetailEmployeeDto;
 import cz.fel.cvut.behelpdesk.dto.DetailRequestDto;
 import cz.fel.cvut.behelpdesk.dto.InputRequestDto;
 import cz.fel.cvut.behelpdesk.dao.Request;
 import cz.fel.cvut.behelpdesk.dto.RequestDto;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
+import cz.fel.cvut.behelpdesk.enumeration.StateEnum;
 import cz.fel.cvut.behelpdesk.exception.NotFoundException;
 import cz.fel.cvut.behelpdesk.mapper.RequestDetailMapper;
 import cz.fel.cvut.behelpdesk.mapper.RequestMapper;
@@ -14,7 +17,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,16 +30,128 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
     private final RequestDetailMapper requestDetailMapper;
+    private final EmailService emailService;
+    private final EmployeeService employeeService;
 
     @Transactional
     public RequestDto createRequest(InputRequestDto inputRequestDto){
         Request requestToSave = requestMapper.toEntity(inputRequestDto);
-        return requestMapper.toDto(requestRepository.save(requestToSave));
+        Request savedRequest = requestRepository.save(requestToSave);
+        RequestDto savedRequestDto = requestMapper.toDto(savedRequest);
+
+        EmailRequest emailRequest = new EmailRequest();
+        List<DetailEmployeeDto> employees = employeeService.getEmployeesByCategory(savedRequest.getRequestCategory());
+        Set<String> recipients = employees.stream()
+                .map(employee -> employee.username() + "@ulz.cz")
+                .collect(Collectors.toSet());
+        emailRequest.setSubject("Na Helpdesku byl nahlášen požadavek s názvem: " + savedRequest.getName());
+        emailRequest.setMessage(
+                "Uživatel: "+ "<b>"+savedRequest.getAssignedBy().getForename() + " " + savedRequest.getAssignedBy().getSurname() + "</b>"+"<br>"
+                + "Nahlásil požadavek: " + "<b>"+ savedRequest.getName() + "</b>" +  "<br>"
+                + "S prioritou: "  + "<b>"+ savedRequest.getRequestPriority().getCzechString() + "</b>" +   "<br>"
+                + "V kategorii: "  + "<b>"+ savedRequest.getRequestCategory().getCzechString() + "</b>" +   "<br>"
+                + "Popis požadavku: "
+                + "<br>"
+                +  savedRequest.getDescription() +   "<br>"
+                + "Prosíme o převzetí tohoto požadavku: " +  "<a href=\"http://192.168.10.31:3000/requests/"+savedRequest.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>"
+                + "<br>"
+                + "<br>"
+                + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
+
+        emailRequest.setRecipients(recipients);
+        emailService.sendEmail(emailRequest);
+
+        return savedRequestDto;
     }
 
     @Transactional
     public RequestDto updateRequest(Long id, InputRequestDto inputRequestDto){
         Request requestToUpdate = findRequestById(id);
+        if(requestToUpdate.getRequestState() != StateEnum.SOLVED && inputRequestDto.requestState() == StateEnum.SOLVED
+        && requestToUpdate.getRequestCategory() == inputRequestDto.requestCategory()
+        && requestToUpdate.getRequestPriority() == inputRequestDto.requestPriority()){
+            requestToUpdate.setDateOfCompletion(LocalDateTime.now());
+            EmailRequest emailRequest = new EmailRequest();
+            Set<String> recipients = Set.of(requestToUpdate.getAssignedBy().getUsername() + "@ulz.cz");
+            emailRequest.setSubject("Váš požadavek s názvem: " + requestToUpdate.getName()+" byl vyřešen");
+            emailRequest.setMessage(
+                    "Dobrý den,"
+                    +   "<br>"
+                    + "<br>" + "Váš požadavek s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " byl vyřešen." + "<br>"
+                    +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                    +   "<br>"
+                    + "S pozdravem,"
+                    +   "<br>"
+                    + "Helpdesk ÚLZ"
+                    +   "<br>"
+                    + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
+
+            emailRequest.setRecipients(recipients);
+            emailService.sendEmail(emailRequest);
+        }
+        else {
+            requestToUpdate.setDateOfCompletion(null);
+        }
+
+        if (inputRequestDto.requestState() == StateEnum.IN_PROGRESS && requestToUpdate.getAssignedTo().isEmpty() && !inputRequestDto.assignedTo().isEmpty()) {
+            EmailRequest emailRequest = new EmailRequest();
+            Set<String> recipients = Set.of(requestToUpdate.getAssignedBy().getUsername() + "@ulz.cz");
+            emailRequest.setSubject("Váš požavek s názvem: " + requestToUpdate.getName()+" je nyní v řešení");
+            emailRequest.setMessage(
+                    "Dobrý den,"
+                            +   "<br>"
+                            + "<br>" + "Váš požavek s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " je nyní v řešení a byl k němu přiřazen řešitel." + "<br>"
+                            +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                            +   "<br>"
+                            + "S pozdravem,"
+                            +   "<br>"
+                            + "Helpdesk ÚLZ"
+                            +   "<br>"
+                            + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
+
+            emailRequest.setRecipients(recipients);
+            emailService.sendEmail(emailRequest);
+        }
+        else if(requestToUpdate.getAssignedTo().isEmpty() && !inputRequestDto.assignedTo().isEmpty()){
+            EmailRequest emailRequest = new EmailRequest();
+            Set<String> recipients = Set.of(requestToUpdate.getAssignedBy().getUsername() + "@ulz.cz");
+            emailRequest.setSubject("K Vašemu požadavku s názvem: " + requestToUpdate.getName()+" byl přiřazen řešitel");
+            emailRequest.setMessage(
+                    "Dobrý den,"
+                            +   "<br>"
+                            + "<br>" + "k Vašemu požadavku s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " byl přiřazen řešitel." + "<br>"
+                            +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                            +   "<br>"
+                            + "S pozdravem,"
+                            +   "<br>"
+                            + "Helpdesk ÚLZ"
+                            +   "<br>"
+                            + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
+
+            emailRequest.setRecipients(recipients);
+            emailService.sendEmail(emailRequest);
+        }
+        else  if (inputRequestDto.requestState() == StateEnum.INVALID) {
+            EmailRequest emailRequest = new EmailRequest();
+            Set<String> recipients = Set.of(requestToUpdate.getAssignedBy().getUsername() + "@ulz.cz");
+            emailRequest.setSubject("Váš požavek s názvem: " + requestToUpdate.getName()+" byl označen jako neplatný.");
+            emailRequest.setMessage(
+                    "Dobrý den,"
+                            +   "<br>"
+                            + "<br>" + "Váš požavek s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " byl označen jako neplatný." + "<br>"
+                            +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                            +   "<br>"
+                            + "S pozdravem,"
+                            +   "<br>"
+                            + "Helpdesk ÚLZ"
+                            +   "<br>"
+                            + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
+
+            emailRequest.setRecipients(recipients);
+            emailService.sendEmail(emailRequest);
+        }
+
+
         requestToUpdate = requestMapper.partialUpdate(inputRequestDto, requestToUpdate);
         return requestMapper.toDto(requestRepository.save(requestToUpdate));
     }

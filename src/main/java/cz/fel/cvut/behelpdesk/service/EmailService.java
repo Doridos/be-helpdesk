@@ -7,6 +7,7 @@ import cz.fel.cvut.behelpdesk.dao.EmailRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.azure.identity.ClientSecretCredential;
@@ -42,6 +43,7 @@ public class EmailService {
 
     Logger log = LoggerFactory.getLogger(getClass());
 
+    @Async
     public void sendEmail(EmailRequest emailRequest) {
 
         // establish the connection with M-Graph

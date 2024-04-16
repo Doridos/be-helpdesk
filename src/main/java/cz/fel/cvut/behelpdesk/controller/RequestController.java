@@ -45,20 +45,25 @@ public class RequestController {
         return requestService.getRequestsAssignedByEmployee(employeeService.findEmployeeById(username));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('MANAGER') || hasRole('SOLVER')")
     @GetMapping(value = "/assigned/to/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DetailRequestDto> getRequestAssignedToByEmployee(@PathVariable String username) {
         return requestService.getRequestsAssignedToEmployee(employeeService.findEmployeeById(username));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('MANAGER') || hasRole('SOLVER')")
     @GetMapping(value = "/category/{category}",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DetailRequestDto> getRequestByCategory(@PathVariable String category) {
         return requestService.getRequestsByCategory(CategoryEnum.valueOf(category.toUpperCase()));
     }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('MANAGER') || hasRole('SOLVER')")
     @PostMapping(value = "/categories", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DetailRequestDto> getRequestsByCategories(@RequestBody List<CategoryEnum> categories) {
         return requestService.getRequestsByCategories(categories);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('MANAGER')")
     @GetMapping(value = "/all",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DetailRequestDto> getAllRequests() {
         return requestService.getAllRequestsDetail();
