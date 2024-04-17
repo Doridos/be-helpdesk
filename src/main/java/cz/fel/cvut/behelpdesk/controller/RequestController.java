@@ -6,6 +6,7 @@ import cz.fel.cvut.behelpdesk.dto.DetailRequestDto;
 import cz.fel.cvut.behelpdesk.dto.InputRequestDto;
 import cz.fel.cvut.behelpdesk.dto.RequestDto;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
+import cz.fel.cvut.behelpdesk.enumeration.StateEnum;
 import cz.fel.cvut.behelpdesk.service.EmailService;
 import cz.fel.cvut.behelpdesk.service.EmployeeService;
 import cz.fel.cvut.behelpdesk.service.RequestService;
@@ -18,7 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -29,6 +32,24 @@ public class RequestController {
     private final RequestService requestService;
     private final EmployeeService employeeService;
     private final EmailService emailService;
+
+    @GetMapping("/count-by-date")
+    public ResponseEntity<Map<LocalDate, Long>> countRequestsByDate() {
+        Map<LocalDate, Long> counts = requestService.countRequestsByDate();
+        return ResponseEntity.ok(counts);
+    }
+
+    @GetMapping("/count-by-category")
+    public ResponseEntity<Map<CategoryEnum, Long>> countRequestsByCategory() {
+        Map<CategoryEnum, Long> counts = requestService.countRequestsByCategory();
+        return ResponseEntity.ok(counts);
+    }
+
+    @GetMapping("/count-by-state")
+    public ResponseEntity<Map<StateEnum, Long>> countRequestsByState() {
+        Map<StateEnum, Long> counts = requestService.countRequestsByState();
+        return ResponseEntity.ok(counts);
+    }
 
     @PostMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RequestDto> addRequest(@RequestBody InputRequestDto inputRequestDto) {

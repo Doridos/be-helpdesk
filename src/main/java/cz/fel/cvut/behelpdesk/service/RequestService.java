@@ -17,9 +17,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,7 @@ public class RequestService {
                 + "Popis požadavku: "
                 + "<br>"
                 +  savedRequest.getDescription() +   "<br>"
+                + "<br>"
                 + "Prosíme o převzetí tohoto požadavku: " +  "<a href=\"http://192.168.10.31:3000/requests/"+savedRequest.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>"
                 + "<br>"
                 + "<br>"
@@ -63,6 +66,23 @@ public class RequestService {
 
         return savedRequestDto;
     }
+
+    public Map<StateEnum, Long> countRequestsByState() {
+        return requestRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Request::getRequestState, Collectors.counting()));
+    }
+
+    public Map<CategoryEnum, Long> countRequestsByCategory() {
+        return requestRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Request::getRequestCategory, Collectors.counting()));
+    }
+    public Map<LocalDate, Long> countRequestsByDate() {
+    LocalDateTime ninetyDaysAgo = LocalDateTime.now().minusDays(90);
+    List<Request> requests = requestRepository.findAllOpenedFrom(ninetyDaysAgo);
+    return requests.stream()
+        .collect(Collectors.groupingBy(request -> request.getDateOfAnnouncement().toLocalDate(), Collectors.counting()));
+}
+
 
     @Transactional
     public RequestDto updateRequest(Long id, InputRequestDto inputRequestDto){
@@ -83,6 +103,7 @@ public class RequestService {
                     + "S pozdravem,"
                     +   "<br>"
                     + "Helpdesk ÚLZ"
+                    +   "<br>"
                     +   "<br>"
                     + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
 
@@ -107,6 +128,7 @@ public class RequestService {
                             +   "<br>"
                             + "Helpdesk ÚLZ"
                             +   "<br>"
+                            +   "<br>"
                             + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
 
             emailRequest.setRecipients(recipients);
@@ -126,6 +148,7 @@ public class RequestService {
                             +   "<br>"
                             + "Helpdesk ÚLZ"
                             +   "<br>"
+                            +   "<br>"
                             + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
 
             emailRequest.setRecipients(recipients);
@@ -144,6 +167,7 @@ public class RequestService {
                             + "S pozdravem,"
                             +   "<br>"
                             + "Helpdesk ÚLZ"
+                            +   "<br>"
                             +   "<br>"
                             + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
 
