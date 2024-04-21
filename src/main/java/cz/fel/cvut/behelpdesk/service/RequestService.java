@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class RequestService {
     @Transactional
     public RequestDto createRequest(InputRequestDto inputRequestDto){
         Request requestToSave = requestMapper.toEntity(inputRequestDto);
+        requestToSave.setDateOfAnnouncement(LocalDateTime.now(ZoneId.of("CET")));
         Request savedRequest = requestRepository.save(requestToSave);
         RequestDto savedRequestDto = requestMapper.toDto(savedRequest);
 
@@ -56,7 +58,7 @@ public class RequestService {
                 + "<br>"
                 +  savedRequest.getDescription() +   "<br>"
                 + "<br>"
-                + "Prosíme o převzetí tohoto požadavku: " +  "<a href=\"http://192.168.10.31:3000/requests/"+savedRequest.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>"
+                + "Prosíme o převzetí tohoto požadavku: " +  "<a href=\"http://helpdesk/requests/"+savedRequest.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>"
                 + "<br>"
                 + "<br>"
                 + "Automatická zpráva - tato zpráva je automaticky generovaná, neodpovídejte na ni prosím.");
@@ -77,7 +79,7 @@ public class RequestService {
                 .collect(Collectors.groupingBy(Request::getRequestCategory, Collectors.counting()));
     }
     public Map<LocalDate, Long> countRequestsByDate() {
-    LocalDateTime ninetyDaysAgo = LocalDateTime.now().minusDays(90);
+    LocalDateTime ninetyDaysAgo = LocalDateTime.now(ZoneId.of("CET")).minusDays(90);
     List<Request> requests = requestRepository.findAllOpenedFrom(ninetyDaysAgo);
     return requests.stream()
         .collect(Collectors.groupingBy(request -> request.getDateOfAnnouncement().toLocalDate(), Collectors.counting()));
@@ -90,7 +92,7 @@ public class RequestService {
         if(requestToUpdate.getRequestState() != StateEnum.SOLVED && inputRequestDto.requestState() == StateEnum.SOLVED
         && requestToUpdate.getRequestCategory() == inputRequestDto.requestCategory()
         && requestToUpdate.getRequestPriority() == inputRequestDto.requestPriority()){
-            requestToUpdate.setDateOfCompletion(LocalDateTime.now());
+            requestToUpdate.setDateOfCompletion(LocalDateTime.now(ZoneId.of("CET")));
             EmailRequest emailRequest = new EmailRequest();
             Set<String> recipients = Set.of(requestToUpdate.getAssignedBy().getUsername() + "@ulz.cz");
             emailRequest.setSubject("Váš požadavek s názvem: " + requestToUpdate.getName()+" byl vyřešen");
@@ -98,7 +100,7 @@ public class RequestService {
                     "Dobrý den,"
                     +   "<br>"
                     + "<br>" + "Váš požadavek s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " byl vyřešen." + "<br>"
-                    +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                    +  "<a href=\"http://helpdesk/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
                     +   "<br>"
                     + "S pozdravem,"
                     +   "<br>"
@@ -122,7 +124,7 @@ public class RequestService {
                     "Dobrý den,"
                             +   "<br>"
                             + "<br>" + "Váš požavek s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " je nyní v řešení a byl k němu přiřazen řešitel." + "<br>"
-                            +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                            +  "<a href=\"http://helpdesk/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
                             +   "<br>"
                             + "S pozdravem,"
                             +   "<br>"
@@ -142,7 +144,7 @@ public class RequestService {
                     "Dobrý den,"
                             +   "<br>"
                             + "<br>" + "k Vašemu požadavku s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " byl přiřazen řešitel." + "<br>"
-                            +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                            +  "<a href=\"http://helpdesk/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
                             +   "<br>"
                             + "S pozdravem,"
                             +   "<br>"
@@ -162,7 +164,7 @@ public class RequestService {
                     "Dobrý den,"
                             +   "<br>"
                             + "<br>" + "Váš požavek s názvem: "+ "<b>"+requestToUpdate.getName() +"</b>"+ " byl označen jako neplatný." + "<br>"
-                            +  "<a href=\"http://192.168.10.31:3000/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
+                            +  "<a href=\"http://helpdesk/requests/"+requestToUpdate.getId()+"\" target=\"_blank\">Odkaz na požadavek</a>" + "<br>"
                             +   "<br>"
                             + "S pozdravem,"
                             +   "<br>"
