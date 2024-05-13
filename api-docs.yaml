@@ -1,0 +1,580 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080/api/v1
+  description: Generated server url
+paths:
+  /request/{id}:
+    get:
+      tags:
+      - request-controller
+      operationId: getSpecificRequest
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailRequestDto'
+    put:
+      tags:
+      - request-controller
+      operationId: updateSpecificRequest
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputRequestDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestDto'
+  /employees/{username}:
+    put:
+      tags:
+      - employee-controller
+      operationId: updateSpecificEmployee
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdateDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeUpdateDto'
+  /request/post:
+    post:
+      tags:
+      - request-controller
+      operationId: addRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputRequestDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RequestDto'
+  /request/categories:
+    post:
+      tags:
+      - request-controller
+      operationId: getRequestsByCategories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                enum:
+                - INTRANET
+                - SOFTWARE
+                - HARDWARE
+                - PROPERTY
+                - PERMISSION
+                - OTHER
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailRequestDto'
+  /employees/add:
+    post:
+      tags:
+      - employee-controller
+      operationId: addEmployees
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int32
+  /comment:
+    post:
+      tags:
+      - comment-controller
+      operationId: addComment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputCommentDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+  /authentication:
+    post:
+      tags:
+      - authentication-controller
+      operationId: createAuthenticationToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /request/count-by-state:
+    get:
+      tags:
+      - request-controller
+      operationId: countRequestsByState
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int64
+  /request/count-by-date:
+    get:
+      tags:
+      - request-controller
+      operationId: countRequestsByDate
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int64
+  /request/count-by-category:
+    get:
+      tags:
+      - request-controller
+      operationId: countRequestsByCategory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int64
+  /request/category/{category}:
+    get:
+      tags:
+      - request-controller
+      operationId: getRequestByCategory
+      parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailRequestDto'
+  /request/assigned/to/{username}:
+    get:
+      tags:
+      - request-controller
+      operationId: getRequestAssignedToByEmployee
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailRequestDto'
+  /request/assigned/by/{username}:
+    get:
+      tags:
+      - request-controller
+      operationId: getRequestAssignedByEmployee
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailRequestDto'
+  /request/all:
+    get:
+      tags:
+      - request-controller
+      operationId: getAllRequests
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailRequestDto'
+  /request/:
+    get:
+      tags:
+      - request-controller
+      operationId: index
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /employees/{category}:
+    get:
+      tags:
+      - employee-controller
+      operationId: getUsersByCategory
+      parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailEmployeeDto'
+  /employees/user/{username}:
+    get:
+      tags:
+      - employee-controller
+      operationId: getEmployeeByUsername
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailEmployeeDto'
+  /employees/all:
+    get:
+      tags:
+      - employee-controller
+      operationId: getAllRequests_1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailEmployeeDto'
+components:
+  schemas:
+    InputRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        dateOfAnnouncement:
+          type: string
+          format: date-time
+        dateOfCompletion:
+          type: string
+          format: date-time
+        requestState:
+          type: string
+          enum:
+          - NEW
+          - IN_PROGRESS
+          - SOLVED
+          - INVALID
+        requestCategory:
+          type: string
+          enum:
+          - INTRANET
+          - SOFTWARE
+          - HARDWARE
+          - PROPERTY
+          - PERMISSION
+          - OTHER
+        requestPriority:
+          type: string
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+        assignedTo:
+          type: array
+          items:
+            type: string
+        assignedBy:
+          type: string
+    RequestDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        dateOfAnnouncement:
+          type: string
+          format: date-time
+        dateOfCompletion:
+          type: string
+          format: date-time
+        requestState:
+          type: string
+          enum:
+          - NEW
+          - IN_PROGRESS
+          - SOLVED
+          - INVALID
+        requestCategory:
+          type: string
+          enum:
+          - INTRANET
+          - SOFTWARE
+          - HARDWARE
+          - PROPERTY
+          - PERMISSION
+          - OTHER
+        requestPriority:
+          type: string
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+    EmployeeUpdateDto:
+      type: object
+      properties:
+        userRole:
+          type: string
+          enum:
+          - EMPLOYEE
+          - SOLVER
+          - MANAGER
+          - ADMIN
+          - NON_ACTIVE
+        categories:
+          type: array
+          items:
+            type: string
+            enum:
+            - INTRANET
+            - SOFTWARE
+            - HARDWARE
+            - PROPERTY
+            - PERMISSION
+            - OTHER
+    CommentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        content:
+          type: string
+        dateOfComment:
+          type: string
+          format: date-time
+        author:
+          $ref: '#/components/schemas/ShortEmployeeDto'
+    DetailRequestDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        dateOfAnnouncement:
+          type: string
+          format: date-time
+        dateOfCompletion:
+          type: string
+          format: date-time
+        assignedBy:
+          $ref: '#/components/schemas/ShortEmployeeDto'
+        assignedTo:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShortEmployeeDto'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentDto'
+        requestState:
+          type: string
+          enum:
+          - NEW
+          - IN_PROGRESS
+          - SOLVED
+          - INVALID
+        requestCategory:
+          type: string
+          enum:
+          - INTRANET
+          - SOFTWARE
+          - HARDWARE
+          - PROPERTY
+          - PERMISSION
+          - OTHER
+        requestPriority:
+          type: string
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+    ShortEmployeeDto:
+      type: object
+      properties:
+        username:
+          type: string
+        forename:
+          type: string
+        surname:
+          type: string
+    InputCommentDto:
+      type: object
+      properties:
+        content:
+          type: string
+        dateOfComment:
+          type: string
+          format: date-time
+        authorUsername:
+          type: string
+        requestId:
+          type: integer
+          format: int64
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    DetailEmployeeDto:
+      type: object
+      properties:
+        username:
+          type: string
+        forename:
+          type: string
+        surname:
+          type: string
+        userRole:
+          type: string
+          enum:
+          - EMPLOYEE
+          - SOLVER
+          - MANAGER
+          - ADMIN
+          - NON_ACTIVE
+        categories:
+          type: array
+          items:
+            type: string
+            enum:
+            - INTRANET
+            - SOFTWARE
+            - HARDWARE
+            - PROPERTY
+            - PERMISSION
+            - OTHER
