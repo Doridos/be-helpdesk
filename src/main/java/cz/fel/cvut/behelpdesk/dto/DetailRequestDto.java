@@ -2,7 +2,6 @@ package cz.fel.cvut.behelpdesk.dto;
 
 import cz.fel.cvut.behelpdesk.dao.Comment;
 import cz.fel.cvut.behelpdesk.dao.Request;
-import cz.fel.cvut.behelpdesk.dto.ShortEmployeeDto;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
 import cz.fel.cvut.behelpdesk.enumeration.PriorityEnum;
 import cz.fel.cvut.behelpdesk.enumeration.StateEnum;

@@ -2,10 +2,7 @@ package cz.fel.cvut.behelpdesk.controller;
 
 import cz.fel.cvut.behelpdesk.dto.CommentDto;
 import cz.fel.cvut.behelpdesk.dto.InputCommentDto;
-import cz.fel.cvut.behelpdesk.dto.InputRequestDto;
-import cz.fel.cvut.behelpdesk.dto.RequestDto;
 import cz.fel.cvut.behelpdesk.service.CommentService;
-import cz.fel.cvut.behelpdesk.service.RequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

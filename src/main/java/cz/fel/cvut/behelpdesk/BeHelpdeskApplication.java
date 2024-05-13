@@ -1,6 +1,5 @@
 package cz.fel.cvut.behelpdesk;
 
-import cz.fel.cvut.behelpdesk.repository.CommentRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

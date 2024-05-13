@@ -1,7 +1,6 @@
 package cz.fel.cvut.behelpdesk.repository;
 
 import cz.fel.cvut.behelpdesk.dao.Employee;
-import cz.fel.cvut.behelpdesk.dao.Request;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
 import cz.fel.cvut.behelpdesk.enumeration.RoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;

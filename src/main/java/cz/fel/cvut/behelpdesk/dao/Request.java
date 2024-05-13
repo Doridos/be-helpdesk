@@ -3,7 +3,6 @@ package cz.fel.cvut.behelpdesk.dao;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
 import cz.fel.cvut.behelpdesk.enumeration.PriorityEnum;
 import cz.fel.cvut.behelpdesk.enumeration.StateEnum;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

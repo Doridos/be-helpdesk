@@ -1,27 +1,20 @@
 package cz.fel.cvut.behelpdesk.service;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.azure.identity.ClientSecretCredential;
+import com.azure.identity.ClientSecretCredentialBuilder;
+import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
+import com.microsoft.graph.models.*;
+import com.microsoft.graph.requests.GraphServiceClient;
 import cz.fel.cvut.behelpdesk.dao.EmailRequest;
+import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.azure.identity.ClientSecretCredential;
-import com.azure.identity.ClientSecretCredentialBuilder;
-import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
-import com.microsoft.graph.models.BodyType;
-import com.microsoft.graph.models.EmailAddress;
-import com.microsoft.graph.models.ItemBody;
-import com.microsoft.graph.models.Message;
-import com.microsoft.graph.models.Recipient;
-import com.microsoft.graph.models.UserSendMailParameterSet;
-import com.microsoft.graph.requests.GraphServiceClient;
-
-import okhttp3.Request;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class EmailService {

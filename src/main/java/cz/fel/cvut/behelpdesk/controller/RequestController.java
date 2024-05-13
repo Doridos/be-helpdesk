@@ -1,7 +1,6 @@
 package cz.fel.cvut.behelpdesk.controller;
 
 import cz.fel.cvut.behelpdesk.dao.EmailRequest;
-import cz.fel.cvut.behelpdesk.dto.DetailEmployeeDto;
 import cz.fel.cvut.behelpdesk.dto.DetailRequestDto;
 import cz.fel.cvut.behelpdesk.dto.InputRequestDto;
 import cz.fel.cvut.behelpdesk.dto.RequestDto;
@@ -15,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;

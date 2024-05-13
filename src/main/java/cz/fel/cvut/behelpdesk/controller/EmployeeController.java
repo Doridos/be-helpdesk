@@ -1,7 +1,7 @@
 package cz.fel.cvut.behelpdesk.controller;
 
-import cz.fel.cvut.behelpdesk.dao.Employee;
-import cz.fel.cvut.behelpdesk.dto.*;
+import cz.fel.cvut.behelpdesk.dto.DetailEmployeeDto;
+import cz.fel.cvut.behelpdesk.dto.EmployeeUpdateDto;
 import cz.fel.cvut.behelpdesk.enumeration.CategoryEnum;
 import cz.fel.cvut.behelpdesk.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
