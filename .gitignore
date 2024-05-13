@@ -18,6 +18,7 @@
 *.zip
 *.tar.gz
 *.rar
+.mvn
 EmployeeService.java
 SecurityConfig.java
 
