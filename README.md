@@ -5,7 +5,7 @@
 
 Pro spuštění aplikace je nutné mít nainstalovaný software [Docker](https://www.docker.com)
 
-Po stažení repositáře je potřeba nejdříve vytvořit image aplikace pomocí příkazu a nahrát ho do Docker Hubu:
+Po stažení repositáře je potřeba nejdříve vytvořit image aplikace a nahrát jí do Docker Hubu:
 
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 -t <username/repository:tag-name> --push .
@@ -29,3 +29,5 @@ docker run --rm --name=<container-name> -p 8080:8080 -d <username/repository:tag
 ```
 
 Pozn.: Proměnné v závorkách <> je potřeba nahradit skutečnými hodnotami a tyto hodnoty nastavit i v souboru application.properties.
+
+Pozn.: Pro nahrání aplikace do Docker Hubu je potřeba mít účet na této platformě.
